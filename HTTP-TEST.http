@@ -1,0 +1,35 @@
+@host = http://127.0.0.1:8000/api
+@token = 
+
+### ==============================
+###           Auth
+### ==============================
+### Login
+POST {{host}}/auth/login HTTP/1.1
+content-type: application/json
+
+{
+    "email": "k@g.com",
+    "password": "password"
+}
+
+### Get Auth User
+GET {{host}}/auth/user HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+### Logout
+POST {{host}}/auth/logout HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+### Register
+POST {{ host }}/auth/register HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Katakuri",
+    "email": "k@g.com",
+    "password": "password",
+    "password_confirmation": "password"
+}
