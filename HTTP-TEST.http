@@ -1,5 +1,5 @@
 @host = http://127.0.0.1:8000/api
-@token = 
+@token = eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiNWYyZDY2YjQzNTUzNDlhY2Q0ZWNmMmQxMWY0NjhjOTZhODUwYTdlNzljNGExNDI3OTViNWRiZGYzMjJiNWZmM2VmYTRmN2JkNjNkYmZhYTIiLCJpYXQiOjE2NDA5NTI2NTQuNzI1NTE4LCJuYmYiOjE2NDA5NTI2NTQuNzI1NTI2LCJleHAiOjE2NzI0ODg2NTQuNTM0MTU5LCJzdWIiOiIxIiwic2NvcGVzIjpbXX0.QLZ3fDjpySlDN_CDPY1u213MCn3wM1LqKAx98ItaQUDWItrPL7ejsdwDTzfVJorYQDrs28ocesgx7uOF-iAQz1AKSDnPoKfffW_Bu56PavxMZMTWte5-mqQdlr8P6-7M9a2i97k74Q2bYXYOP4-RlbWM2q11ZEQ-u8GxE3KPZ3gzYXFThb70Ug8bM1qlc-5bYKiOVrzIoBahG99WsOQ243G3jPeqpqc-xno9hNy99cYQLkzP2Skt2FVjfzTdOIvnzHFyb2Qzb2bsXslupFCebLsJAzffOMBEZTe_QbYpBPiHesLktlwwxOj-klN-FJqs4Mg1I2i0L8knYMM1B0ApD0F3UB-1kqTTayt5m7u7ueILwkg64cteE033F1oF6nIc8KTCGruR1PvZBephZRAvRxZOpcozmLyjakFTDYKsCH0FIu6fB-k0HCSV-Dz4hWaDoYffhbJTEbsi-SsMOsL4gDMbq8KHKwgiKvD8MYaQZuCOEDjPLEzuag7z9f75GBBtE0hEKZ5RdSc2jUgLxSX5w_gFlaOQWQ94KuCaCzWDZv_EYplut_elSKdpH2LcP_0jSMXJdZTEGg-ICqQhG5ltfzxkanl-339E3SOY-3w1EwRioxdq6F_EhpPTtDcvzwVWp7JRtRDttwxo3mK6j-HSbZNaee_QZC8vw49h1WtXIjU
 
 ### ==============================
 ###           Auth
@@ -32,4 +32,38 @@ content-type: application/json
     "email": "k@g.com",
     "password": "password",
     "password_confirmation": "password"
+}
+
+
+### ==============================
+###             Tag
+### ==============================
+### Index
+GET {{ host }}/tag/index HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+### Add
+POST {{ host }}/tag/add HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "name": "football"
+}
+
+
+### ==============================
+###             Link
+### ==============================
+### Add
+POST {{ host }}/link/add HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "title": "Sia",
+    "url": "https://www.youtube.com/watch?v=t2NgsJrrAyM",
+    "tags": [3],
+    "is_private": true
 }

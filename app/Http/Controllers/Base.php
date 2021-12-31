@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 class Base extends Controller
 {
-    public function SUCCESS($msg = 'Task successfull!!', $data = []) {
+    public static function SUCCESS($msg = 'Task successfull!!', $data = []) {
         return response()->json([
             'success' => true,
             'code' => 200,
@@ -15,7 +15,7 @@ class Base extends Controller
         ]);
     }
 
-    public function ERROR($msg = 'An error occurred!!', $error = []) {
+    public static function ERROR($msg = 'An error occurred!!', $error = []) {
         return response()->json([
             'success' => false,
             'code' => 400,

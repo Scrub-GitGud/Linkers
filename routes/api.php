@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\LinkController;
+use App\Http\Controllers\TagController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -26,7 +28,7 @@ Route::group(['prefix' => 'auth',], function () {
     Route::get('/user', [AuthController::class, 'getAuthUser'])->middleware('auth:api');
 });
 
-Route::group(['prefix' => 'admin', 'middleware' => ['auth:api']], function () {
+Route::group(['middleware' => ['auth:api']], function () {
 
     Route::post('/dashboard', [HomeController::class, 'dashboard']);
 
@@ -36,6 +38,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:api']], function () {
         Route::post('/update', [LinkController::class, 'update']);
         Route::post('/delete', [LinkController::class, 'delete']);
         Route::post('/status-toggle', [LinkController::class, 'toggle']);
+    });
+
+    Route::group(['prefix' => 'tag'], function () {
+        Route::get('/index', [TagController::class, 'index']);
+        Route::post('/add', [TagController::class, 'add']);
     });
 });
 

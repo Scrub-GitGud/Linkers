@@ -44,6 +44,6 @@ class Handler extends ExceptionHandler
     public function unauthenticated($request, AuthenticationException $exception){
         if(!$request->expectsJson())
             if(collect($request->route()->middleware())->contains('api'))
-                return (new Base())->ERROR('You are not logged in');
+                return Base::ERROR('You are not logged in');
     }
 }
