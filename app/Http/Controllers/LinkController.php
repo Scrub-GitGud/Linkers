@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Click;
 use App\Models\Link;
 use App\Models\LinkTag;
 use App\Models\Tag;
+use App\Models\Vote;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,11 +15,37 @@ use Illuminate\Support\Str;
 
 class LinkController extends Controller
 {
-    public function index(Request $request){
+    public function getTopLinks(Request $request){
         try {
+            $links = Link::where('user_id', Auth::user()->id)->get();
 
             
-            return Base::SUCCESS('Succeess');
+            
+            return Base::SUCCESS('Succeess', $links);
+        } catch (Exception $e) {
+            return Base::ERROR('an error occurred!', $e->getMessage());
+        }
+    }
+
+    public function index(Request $request){
+        try {
+            $links = Link::where('user_id', Auth::user()->id)->get();
+
+            foreach ($links as $link) {
+                $tags = [];
+                $ling_tags = LinkTag::where('link_id', $link->id)->get();
+                foreach ($ling_tags as $ling_tag_i) {
+                    $tag = Tag::find($ling_tag_i->tag_id);
+                    array_push($tags, $tag);
+                }
+                $link['tags'] = $tags;
+                $link['url_uuid'] = route('click', $link->uuid);
+                $link['clicks'] = Click::where('link_id', $link->id)->count();
+                $link['votes'] = Vote::where('link_id', $link->id)->count();
+                $link['favicon'] = Vote::where('link_id', $link->id)->count();
+            }
+            
+            return Base::SUCCESS('Succeess', $links);
         } catch (Exception $e) {
             return Base::ERROR('an error occurred!', $e->getMessage());
         }
@@ -63,7 +91,7 @@ class LinkController extends Controller
 
     public function update(Request $request){
         $validator =  Validator::make($request->all(), [
-            'type' => 'required|in:school,instructor'
+            'type' => 'required'
         ]);
         if ($validator->fails()) return Base::ERROR($validator->errors()->first(), $validator->errors());
         try {
@@ -75,7 +103,7 @@ class LinkController extends Controller
     
     public function delete(Request $request){
         $validator =  Validator::make($request->all(), [
-            'type' => 'required|in:school,instructor'
+            'type' => 'required'
         ]);
         if ($validator->fails()) return Base::ERROR($validator->errors()->first(), $validator->errors());
         try {
@@ -87,7 +115,7 @@ class LinkController extends Controller
 
     public function toggle(Request $request){
         $validator =  Validator::make($request->all(), [
-            'type' => 'required|in:school,instructor'
+            'type' => 'required'
         ]);
         if ($validator->fails()) return Base::ERROR($validator->errors()->first(), $validator->errors());
         try {
@@ -96,4 +124,23 @@ class LinkController extends Controller
             return Base::ERROR('an error occurred!', $e->getMessage());
         }
     }
+
+    public function click($uuid){
+        try {
+            $ip = request()->ip();
+
+            $link = Link::where('uuid', $uuid)->first();
+
+            $click = new Click();
+            $click->user_id = $link->user_id;
+            $click->link_id = $link->id;
+            $click->ip = $link->ip;
+            $click->save();
+            
+            return redirect($link->url);
+        } catch (Exception $e) {
+            return Base::ERROR('An error occurred!', $e->getMessage());
+        }
+    }
+    
 }

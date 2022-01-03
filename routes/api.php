@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\FolderController;
 use App\Http\Controllers\LinkController;
 use App\Http\Controllers\TagController;
 use Illuminate\Http\Request;
@@ -33,11 +34,21 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('/dashboard', [HomeController::class, 'dashboard']);
 
     Route::group(['prefix' => 'link'], function () {
+        Route::get('/top', [LinkController::class, 'getTopLinks']);
         Route::get('/index', [LinkController::class, 'index']);
         Route::post('/add', [LinkController::class, 'add']);
         Route::post('/update', [LinkController::class, 'update']);
         Route::post('/delete', [LinkController::class, 'delete']);
         Route::post('/status-toggle', [LinkController::class, 'toggle']);
+        Route::post('/click', [LinkController::class, 'click']);
+    });
+    
+    Route::group(['prefix' => 'folder'], function () {
+        Route::get('/index', [FolderController::class, 'index']);
+        Route::post('/add', [FolderController::class, 'add']);
+        Route::get('/link-folders', [FolderController::class, 'linkFolders']);
+        Route::get('/folder-links', [FolderController::class, 'folderLinks']);
+        Route::post('/links/add', [FolderController::class, 'addLinkFolders']);
     });
 
     Route::group(['prefix' => 'tag'], function () {

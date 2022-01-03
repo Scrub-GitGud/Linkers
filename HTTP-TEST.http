@@ -28,8 +28,8 @@ POST {{ host }}/auth/register HTTP/1.1
 content-type: application/json
 
 {
-    "name": "Katakuri",
-    "email": "k@g.com",
+    "name": "Zilla",
+    "email": "z@g.com",
     "password": "password",
     "password_confirmation": "password"
 }
@@ -66,4 +66,20 @@ Authorization: Bearer {{token}}
     "url": "https://www.youtube.com/watch?v=t2NgsJrrAyM",
     "tags": [3],
     "is_private": true
+}
+
+### ==============================
+###             Folder
+### ==============================
+### Index
+GET {{ host }}/folder/index HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+### Add
+POST {{ host }}/folder/add HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "name": "Study"
 }

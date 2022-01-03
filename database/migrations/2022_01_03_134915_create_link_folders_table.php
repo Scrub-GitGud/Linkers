@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateClicksTable extends Migration
+class CreateLinkFoldersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateClicksTable extends Migration
      */
     public function up()
     {
-        Schema::create('clicks', function (Blueprint $table) {
+        Schema::create('link_folders', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('folder_id')->constrained('folders')->onDelete('cascade');
             $table->foreignId('link_id')->constrained('links')->onDelete('cascade');
-            $table->string('ip')->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreateClicksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('clicks');
+        Schema::dropIfExists('link_folders');
     }
 }

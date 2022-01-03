@@ -62,7 +62,7 @@ class AuthController extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 'email' => 'required|string|email',
-                'password' => 'required|confirmed|min:6',
+                'password' => 'required|confirmed',
             ]);
             if ($validator->fails()) return Base::SUCCESS($validator->errors()->first(), $validator->errors());
 
@@ -75,9 +75,19 @@ class AuthController extends Controller
             $user->password = Hash::make($request->password);
             $user->save();
 
+            // $data = [
+            //     'name' => $user->name,
+            //     'email' => $user->email
+            // ];
+            $accessToken = $user->createToken('authToken')->accessToken;
+
             $data = [
-                'name' => $user->name,
-                'email' => $user->email
+                'token' => $accessToken,
+                'user' => [
+                    "id" => $user->id,
+                    "name" => $user->name,
+                    "email" => $user->email,
+                ],
             ];
 
             return Base::SUCCESS('User Successfully Registered.', $data);

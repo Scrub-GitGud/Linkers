@@ -12,7 +12,7 @@ class TagController extends Controller
 {
     public function index(Request $request){
         try {
-            $tags = Tag::get(['id', 'name']);
+            $tags = Tag::get(['id', 'name', 'color']);
             return Base::SUCCESS('Succeess', $tags);
         } catch (Exception $e) {
             return Base::ERROR('an error occurred!', $e->getMessage());
