@@ -57,6 +57,14 @@ Authorization: Bearer {{token}}
 ###             Link
 ### ==============================
 ### Add
+GET {{ host }}/link/top HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "search_text": "game"
+}
+### Add
 POST {{ host }}/link/add HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}

@@ -31,8 +31,6 @@ Route::group(['prefix' => 'auth',], function () {
 
 Route::group(['middleware' => ['auth:api']], function () {
 
-    Route::post('/dashboard', [HomeController::class, 'dashboard']);
-
     Route::group(['prefix' => 'link'], function () {
         Route::get('/top', [LinkController::class, 'getTopLinks']);
         Route::get('/index', [LinkController::class, 'index']);
@@ -41,6 +39,7 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::post('/delete', [LinkController::class, 'delete']);
         Route::post('/status-toggle', [LinkController::class, 'toggle']);
         Route::post('/click', [LinkController::class, 'click']);
+        Route::post('/vote', [LinkController::class, 'vote']);
     });
     
     Route::group(['prefix' => 'folder'], function () {

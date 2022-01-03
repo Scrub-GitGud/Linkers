@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Click;
 use App\Models\Folder;
 use App\Models\Link;
 use App\Models\LinkFolder;
+use App\Models\LinkTag;
+use App\Models\Tag;
+use App\Models\Vote;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -83,6 +87,19 @@ class FolderController extends Controller
             $links = [];
             foreach ($link_folders as $link_folder_i) {
                 $link = Link::find($link_folder_i->link_id);
+                $tags = [];
+                $ling_tags = LinkTag::where('link_id', $link->id)->get();
+                foreach ($ling_tags as $ling_tag_i) {
+                    $tag = Tag::find($ling_tag_i->tag_id);
+                    array_push($tags, $tag);
+                }
+                $link['tags'] = $tags;
+                $link['clicks'] = Click::where('link_id', $link->id)->count();
+                $upvote = Vote::where([['link_id', $link->id], ['type', 'up']])->count();
+                $downvote = Vote::where([['link_id', $link->id], ['type', 'down']])->count();
+                $link['votes'] = $upvote - $downvote;
+                $link['my_vote'] = Vote::where([['user_id', Auth::user()->id], ['link_id', $link->id]])->first();
+                $link['url_uuid'] = route('click', $link->uuid);
                 array_push($links, $link);
             }
             
