@@ -62,7 +62,7 @@ content-type: application/json
 Authorization: Bearer {{token}}
 
 {
-    "search_text": "game"
+    "search_text": ""
 }
 ### Add
 POST {{ host }}/link/add HTTP/1.1

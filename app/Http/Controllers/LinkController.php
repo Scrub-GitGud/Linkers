@@ -16,25 +16,43 @@ use Illuminate\Support\Str;
 
 class LinkController extends Controller
 {
-    public function getTopLinks(Request $request){
-        $validator =  Validator::make($request->all(), [
-            'search_text' => 'required'
-        ]);
-        if ($validator->fails()) return Base::ERROR($validator->errors()->first(), $validator->errors());
+    public function searchAll(Request $request){
         try {
             $search = $request->search_text;
             
             $links = Link::where('user_id', Auth::user()->id)->get();
 
+            if(!$search || $search === '') {
+                return Base::SUCCESS('Succeess', []);
+            }
             $query = DB::table('links')
                     ->join('link_tags', 'link_id', '=', 'links.id')
                     ->join('tags', 'tags.id', '=', 'link_tags.tag_id')
+                    ->where('links.is_private', false)
                     ->where(function($query) use($search) {
                         return $query->where('links.title','like','%'.$search.'%')
                                 ->orWhere('tags.name','like','%'.$search.'%');
                     });
 
-            $links = $query->select('links.title')->orderBy('links.title', 'desc')->get();
+            $links = $query
+                        ->select('links.id', 'links.title', 'links.url', 'links.uuid', 'links.is_private')
+                        ->orderBy('links.title', 'desc')->distinct()->get();
+
+            foreach ($links as $link) {
+                $tags = [];
+                $ling_tags = LinkTag::where('link_id', $link->id)->get();
+                foreach ($ling_tags as $ling_tag_i) {
+                    $tag = Tag::find($ling_tag_i->tag_id);
+                    array_push($tags, $tag);
+                }
+                $link->tags = $tags;
+                $link->url_uuid = route('click', $link->uuid);
+                $link->clicks = Click::where('link_id', $link->id)->count();
+                $upvote = Vote::where([['link_id', $link->id], ['type', 'up']])->count();
+                $downvote = Vote::where([['link_id', $link->id], ['type', 'down']])->count();
+                $link->votes = $upvote - $downvote;
+                $link->my_vote = Vote::where([['user_id', Auth::user()->id], ['link_id', $link->id]])->first();
+            }
             
             return Base::SUCCESS('Succeess', $links);
         } catch (Exception $e) {

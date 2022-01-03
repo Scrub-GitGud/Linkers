@@ -32,7 +32,7 @@ Route::group(['prefix' => 'auth',], function () {
 Route::group(['middleware' => ['auth:api']], function () {
 
     Route::group(['prefix' => 'link'], function () {
-        Route::get('/top', [LinkController::class, 'getTopLinks']);
+        Route::get('/search', [LinkController::class, 'searchAll']);
         Route::get('/index', [LinkController::class, 'index']);
         Route::post('/add', [LinkController::class, 'add']);
         Route::post('/update', [LinkController::class, 'update']);
